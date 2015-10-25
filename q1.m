@@ -1,4 +1,5 @@
 function q1()
+    clc; clear;
     close all;
     m = 200;
     K = 1e-6*ones(m,1);
@@ -15,8 +16,13 @@ function q1()
     hold on;
     plot(x_obs,phi_obs,'ro');
 
-
-
-
-
+    %% Verify if cderab1.m work as intended
+    ind = 1;
+    [Ak_analytical,bk_analytical] = cderab1(ind,K,N,Dx,phi0L,phi0R);
+    dk = 1e-12; dK = zeros(m,1); dK(ind) = dk;
+    [A_dk,b_dk] = makeab1(K+dK,N,Dx,phi0L,phi0R);
+    Ak_numerical = (A_dk - A )/dk;
+    bk_numerical = (b_dk - b )/dk;
+    normest(Ak_numerical-Ak_analytical)/normest(Ak_numerical)
+    normest(bk_numerical-bk_analytical)/normest(bk_numerical)
 end
